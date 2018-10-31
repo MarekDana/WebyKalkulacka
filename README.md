@@ -1,2 +1,0 @@
-# WebyKalkulacka
-Created with CodeSandbox
