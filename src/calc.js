@@ -9,13 +9,30 @@ function updateDisplay() {
   const display = document.querySelector(".calculator-screen");
   display.value = calculator.displayValue;
 }
+
 updateDisplay();
 
 function inputDigit(digit) {
-  if (calculator.displayVlues === "0") {
+  if (calculator.waitingForSecondOperand === true) {
     calculator.displayValue = digit;
-  } else calculator.displayValue = calculator.displayValue + digit;
+    calculator.waitingForSecondOperand = false;
+  } else {
+    if (calculator.displayValue === "0") {
+      calculator.displayValue = digit;
+    } else {
+      calculator.displayValue = calculator.displayValue + digit;
+    }
+  }
 }
+
+function handleOperator(nextOperator) {
+  if (calculator.firstOperand == null) {
+    calculator.firstOperand = parseFloat(calculator.displaValue);
+  }
+  calculator.waitingForSecondOperand = true;
+  calculator.operator = nextOperator;
+}
+
 const keys = document.querrySelector(".calculator-keys");
 keys.addEventListener("click", event => {
   const { target } = event;
@@ -23,6 +40,8 @@ keys.addEventListener("click", event => {
     return;
   }
   if (target.classList.contains("operator")) {
+    handleOperator(target.value);
+    updateDisplay();
     return;
   }
   if (target.classList.contains("all-clear")) {
